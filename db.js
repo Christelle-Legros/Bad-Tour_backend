@@ -8,7 +8,8 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       department INTEGER,
-      category TEXT
+      category TEXT,
+      genre TEXT
     )
   `);
 
@@ -33,6 +34,39 @@ db.serialize(() => {
     )
   `);
 
+  // Table des paires mixtes
+  db.run(`
+    CREATE TABLE IF NOT EXISTS paires_mixtes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  woman_id INTEGER,
+  man_id INTEGER,
+  FOREIGN KEY (woman_id) REFERENCES players(id),
+  FOREIGN KEY (man_id) REFERENCES players(id)
+);
+  `);
+
+  // Table des doubles hommes
+  db.run(`
+    CREATE TABLE IF NOT EXISTS doubles_hommes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  player1_id INTEGER,
+  player2_id INTEGER,
+  FOREIGN KEY (player1_id) REFERENCES players(id),
+  FOREIGN KEY (player2_id) REFERENCES players(id)
+);
+  `);
+
+  // Table des doubles dames
+  db.run(`
+    CREATE TABLE IF NOT EXISTS doubles_dames (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  player1_id INTEGER,
+  player2_id INTEGER,
+  FOREIGN KEY (player1_id) REFERENCES players(id),
+  FOREIGN KEY (player2_id) REFERENCES players(id)
+);
+  `);
+
   // Données initiales pour les catégories (optionnel)
   const categories = [
     "Simple Hommes",
@@ -41,6 +75,7 @@ db.serialize(() => {
     "Double Dames",
     "Double Mixte",
   ];
+
   categories.forEach((name) => {
     db.run(`INSERT OR IGNORE INTO categories (name) VALUES (?)`, [name]);
   });

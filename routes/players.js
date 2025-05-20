@@ -16,13 +16,14 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { name, department, category } = req.body;
+  const { name, department, category, genre } = req.body;
 
   const categoryString = JSON.stringify(category); // 👈 conversion ici
 
   db.run(
-    "INSERT INTO players (name, department, category) VALUES (?, ?, ?)",
-    [name, department, categoryString], // 👈 on insère la version texte
+    "INSERT INTO players (name, department, category, genre) VALUES (?, ?, ?, ?)",
+    [name, department, categoryString, genre],
+    // 👈 on insère la version texte
     function (err) {
       if (err) return res.status(500).send(err);
       res.status(201).json({
@@ -30,6 +31,7 @@ router.post("/", (req, res) => {
         name,
         department,
         category, // on renvoie l'original (tableau) au front
+        genre,
       });
     }
   );
